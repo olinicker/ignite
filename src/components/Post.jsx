@@ -11,9 +11,9 @@ import styles from './Post.module.css';
 
 export default function Post(props) {
     const [comments, setComments] = useState([
-        1,
-        2,
     ])
+
+    const [newCommentText, setNewCommentText] = useState('')
 
     //Usando intl para formatar o Date
     const publishedDateFormatted = format(props.publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", {
@@ -27,9 +27,12 @@ export default function Post(props) {
 
     function handleCreateNewComment() {
         event.preventDefault()
-        //Imutabilidade
+        setComments([...comments, newCommentText])
+        setNewCommentText('')
+    }
 
-        setComments([...comments, comments.length + 1])
+    function handleNewCommentChange() {
+        setNewCommentText(event.target.value)
     }
 
     return (
@@ -60,9 +63,15 @@ export default function Post(props) {
 
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
+
                 <textarea
-                    placeholder='Deixe um comentário'>
+                    name='comment'
+                    placeholder='Deixe um comentário'
+                    onChange={handleNewCommentChange}
+                    value={newCommentText}
+                >
                 </textarea>
+
                 <footer>
                     <button type='submit'>Publicar</button>
                 </footer>
@@ -70,9 +79,9 @@ export default function Post(props) {
 
             <div className={styles.commentList}>
                 {comments.map(comment => {
-                    return <Comment />
+                    return <Comment content={comment} />
                 })}
             </div>
-        </article>
+        </article >
     )
 }
